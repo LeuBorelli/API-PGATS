@@ -1,0 +1,18 @@
+{
+  "name": "api-pgtas",
+  "version": "1.0.0",
+  "description": "API Rest para login, registro, consulta de usuários e transferência de valores, com regras básicas de negócio e documentação Swagger.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.1.0",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
