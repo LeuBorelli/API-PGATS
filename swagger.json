@@ -5,8 +5,31 @@
     "version": "1.0.0",
     "description": "API para login, registro, consulta de usuários e transferência de valores."
   },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "TransferRequest": {
+        "type": "object",
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "value": { "type": "number" }
+        },
+        "required": ["from", "to", "value"]
+      }
+    }
+  },
+  "security": [
+    { "bearerAuth": [] }
+  ],
   "paths": {
-    "/register": {
+  "/register": {
       "post": {
         "summary": "Registrar usuário",
         "requestBody": {
@@ -33,7 +56,7 @@
     },
     "/login": {
       "post": {
-        "summary": "Login de usuário",
+        "summary": "Login do usuário",
         "requestBody": {
           "required": true,
           "content": {
@@ -50,49 +73,70 @@
           }
         },
         "responses": {
-          "200": { "description": "Login realizado" },
-          "401": { "description": "Login ou senha inválidos" }
-        }
-      }
-    },
-    "/users": {
-      "get": {
-        "summary": "Consultar usuários",
-        "responses": {
-          "200": { "description": "Lista de usuários" }
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+              }
+            }
+          },
+          "400": { "description": "Erro de login" }
         }
       }
     },
     "/transfer": {
       "post": {
-        "summary": "Transferir valores",
+        "summary": "Realiza uma transferência entre usuários",
+        "security": [ { "bearerAuth": [] } ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "from": { "type": "string" },
-                  "to": { "type": "string" },
-                  "value": { "type": "number" }
-                },
-                "required": ["from", "to", "value"]
+                "$ref": "#/components/schemas/TransferRequest"
               }
             }
           }
         },
         "responses": {
-          "201": { "description": "Transferência realizada" },
-          "400": { "description": "Erro na transferência" }
+          "201": {
+            "description": "Transferência realizada com sucesso"
+          },
+          "400": {
+            "description": "Usuário remetente ou destinatário não encontrado"
+          },
+          "401": {
+            "description": "Token não fornecido"
+          },
+          "403": {
+            "description": "Token inválido"
+          }
         }
       }
     },
     "/transfers": {
       "get": {
-        "summary": "Consultar transferências",
+        "summary": "Lista todas as transferências",
+        "security": [ { "bearerAuth": [] } ],
         "responses": {
-          "200": { "description": "Lista de transferências" }
+          "200": {
+            "description": "Lista de transferências"
+          },
+          "401": {
+            "description": "Token não fornecido"
+          },
+          "403": {
+            "description": "Token inválido"
+          }
         }
       }
     }

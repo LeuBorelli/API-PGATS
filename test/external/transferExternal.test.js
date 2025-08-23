@@ -5,13 +5,24 @@ const { expect } = require('chai');
 // Testes
 
 describe('Transfer', () => {
-    describe('POST /transfers external', () => {
-        it('Quando informo usuários inexistentes (sem mock), recebo 400', async () => {
+    describe('POST /transfer external', () => {
+        it.only('Quando informo usuários inexistentes (sem mock), recebo 400', async () => {
+            // 1) capturar o Token
+            const respostaLogin = await request ('http://localhost:3000')
+            .post('/login')
+            .send({
+                username: 'Leandro',
+                password: '123456'
+            })
+
+            const token = respostaLogin.body.token;
+            
             const resposta = await request('http://localhost:3000')
                 .post('/transfer')
+                .set('Authorization', `Bearer ${token}`)
                 .send({  
-                    "from": "Farofa",
-                    "to": "Banana",
+                    "from": "Leandro",
+                    "to": "Jessica",
                     "value": 1000
                 });
 
