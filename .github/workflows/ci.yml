@@ -1,10 +1,7 @@
-name: CI
+name: CI Tests Performance
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -30,6 +27,15 @@ jobs:
 
       - name: Esperar a API estar funcionando
         run: sleep 5
+    
+      - name: Instalar k6
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnupg2
+          curl -s https://dl.k6.io/key.gpg | sudo apt-key add -
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6
 
-      - name: Rodar os testes de API via HTTP
-        run: npm run test-external
+      - name: Rodar testes de performance k6
+        run:  k6 run ./test/k6/testes-trabalho-final.js

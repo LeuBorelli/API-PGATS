@@ -1,4 +1,5 @@
-const { users, transfers } = require('../model/userModel');
+const { users } = require('../model/userModel');
+const { transfers } = require('../model/transferModel');
 
 function transfer({ from, to, value }) {
   const remetente = users.find(u => u.username.toLowerCase() === from.toLowerCase());
