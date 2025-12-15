@@ -14,8 +14,11 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "chai": "^5.2.1",
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mocha": "^11.7.1",
     "sinon": "^21.0.0",
     "supertest": "^7.1.4",

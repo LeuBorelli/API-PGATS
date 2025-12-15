@@ -1,16 +1,16 @@
-const { transfers } = require('../model/transferModel');
-const { users } = require('../model/userModel');
+const { users, transfers } = require('../model/userModel');
 
 function transfer({ from, to, value }) {
-  const sender = users.find(u => u.username === from);
-  const recipient = users.find(u => u.username === to);
-  if (!sender || !recipient) throw new Error('Usuário remetente ou destinatário não encontrado');
-  if (recipient.favorecido !== true && value >= 5000) {
-    throw new Error('Transferências acima de R$ 5.000,00 só podem ser feitas para favorecidos');
+  const remetente = users.find(u => u.username.toLowerCase() === from.toLowerCase());
+  const destinatario = users.find(u => u.username.toLowerCase() === to.toLowerCase());
+
+  if (!remetente || !destinatario) {
+    throw new Error('Usuário remetente ou destinatário não encontrado');
   }
-  const transferObj = { from, to, value, date: new Date() };
-  transfers.push(transferObj);
-  return transferObj;
+
+  const transferencia = { from, to, value, date: new Date() };
+  transfers.push(transferencia);
+  return transferencia;
 }
 
 function getTransfers() {

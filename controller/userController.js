@@ -1,4 +1,5 @@
 const userService = require('../service/userService');
+const jwt = require('jsonwebtoken');
 
 exports.register = (req, res) => {
   try {
@@ -12,9 +13,14 @@ exports.register = (req, res) => {
 exports.login = (req, res) => {
   try {
     const user = userService.loginUser(req.body);
-    res.json(user);
-  } catch (err) {
-    res.status(401).json({ error: err.message });
+    const token = jwt.sign(
+      { username: user.username },
+      process.env.JWT_SECRET, // ALTERADO
+      { expiresIn: '1h' }
+    );
+    res.json({ token });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };
 
